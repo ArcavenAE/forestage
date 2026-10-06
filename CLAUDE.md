@@ -109,6 +109,7 @@ Read charter.md before any substantive work. It contains:
 3. Write an Exploration Brief in _kos/probes/
 4. Do the probe work
 5. Write a finding in _kos/findings/
+   Mint the id with `kos id finding <slug>`; never hand-allocate a number.
 6. Harvest: update affected NODES (`_kos/nodes/{bedrock,frontier,graveyard}/*.yaml`),
    move files if confidence changed. Charter is renderer output (per orc F22,
    `kos charter render`); do NOT hand-edit charter prose outside
