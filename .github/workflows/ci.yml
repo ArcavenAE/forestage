@@ -156,6 +156,7 @@ jobs:
       - uses: EmbarkStudios/cargo-deny-action@82eb9f621fbc699dd0918f3ea06864c14cc84246 # v2
         with:
           command: check advisories licenses bans
+          rust-version: stable
 
   # ── Build ─────────────────────────────────────────────────────────────
   build:
