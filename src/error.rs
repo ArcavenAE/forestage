@@ -18,7 +18,7 @@ pub enum ForestageError {
     #[error("yaml parse error in {path}: {source}")]
     Yaml {
         path: String,
-        source: serde_yaml::Error,
+        source: serde_norway::Error,
     },
 
     #[error("theme not found: {slug}")]

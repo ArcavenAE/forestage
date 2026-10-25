@@ -294,7 +294,7 @@ fn load_config_table(path: &Path) -> toml::Table {
                 toml::Table::new()
             }
         },
-        ConfigFormat::Yaml => match serde_yaml::from_str::<toml::Table>(&content) {
+        ConfigFormat::Yaml => match serde_norway::from_str::<toml::Table>(&content) {
             Ok(table) => table,
             Err(e) => {
                 eprintln!("warning: failed to parse {}: {e}", path.display());
