@@ -131,20 +131,19 @@ fn render_markdown(text: &str) -> Vec<Line<'static>> {
                 }
 
                 // Numbered lists
-                if line.chars().take_while(char::is_ascii_digit).count() > 0 {
-                    if let Some(rest) = line
+                if line.chars().take_while(char::is_ascii_digit).count() > 0
+                    && let Some(rest) = line
                         .find(". ")
                         .and_then(|i| if i <= 3 { Some(&line[i + 2..]) } else { None })
-                    {
-                        let num = &line[..line.find(". ").expect("just found it")];
-                        let mut spans = vec![Span::styled(
-                            format!("  {num}. "),
-                            Style::default().fg(Color::DarkGray),
-                        )];
-                        spans.extend(render_inline(rest));
-                        lines.push(Line::from(spans));
-                        continue;
-                    }
+                {
+                    let num = &line[..line.find(". ").expect("just found it")];
+                    let mut spans = vec![Span::styled(
+                        format!("  {num}. "),
+                        Style::default().fg(Color::DarkGray),
+                    )];
+                    spans.extend(render_inline(rest));
+                    lines.push(Line::from(spans));
+                    continue;
                 }
 
                 // Blockquotes
@@ -188,21 +187,21 @@ fn render_inline(text: &str) -> Vec<Span<'static>> {
 
     while !remaining.is_empty() {
         // Inline code: `...`
-        if let Some(start) = remaining.find('`') {
-            if let Some(end) = remaining[start + 1..].find('`') {
-                // Push text before the code
-                if start > 0 {
-                    spans.extend(render_emphasis(&remaining[..start]));
-                }
-                // Push the code span
-                let code = &remaining[start + 1..start + 1 + end];
-                spans.push(Span::styled(
-                    code.to_string(),
-                    Style::default().fg(Color::Yellow),
-                ));
-                remaining = &remaining[start + 1 + end + 1..];
-                continue;
+        if let Some(start) = remaining.find('`')
+            && let Some(end) = remaining[start + 1..].find('`')
+        {
+            // Push text before the code
+            if start > 0 {
+                spans.extend(render_emphasis(&remaining[..start]));
             }
+            // Push the code span
+            let code = &remaining[start + 1..start + 1 + end];
+            spans.push(Span::styled(
+                code.to_string(),
+                Style::default().fg(Color::Yellow),
+            ));
+            remaining = &remaining[start + 1 + end + 1..];
+            continue;
         }
 
         // No more inline code — render rest with emphasis
@@ -223,39 +222,38 @@ fn render_emphasis(text: &str) -> Vec<Span<'static>> {
 
     while !remaining.is_empty() {
         // Bold: **...**
-        if let Some(start) = remaining.find("**") {
-            if let Some(end) = remaining[start + 2..].find("**") {
-                if start > 0 {
-                    spans.push(Span::raw(remaining[..start].to_string()));
-                }
-                let bold_text = &remaining[start + 2..start + 2 + end];
-                spans.push(Span::styled(
-                    bold_text.to_string(),
-                    Style::default().add_modifier(Modifier::BOLD),
-                ));
-                remaining = &remaining[start + 2 + end + 2..];
-                continue;
+        if let Some(start) = remaining.find("**")
+            && let Some(end) = remaining[start + 2..].find("**")
+        {
+            if start > 0 {
+                spans.push(Span::raw(remaining[..start].to_string()));
             }
+            let bold_text = &remaining[start + 2..start + 2 + end];
+            spans.push(Span::styled(
+                bold_text.to_string(),
+                Style::default().add_modifier(Modifier::BOLD),
+            ));
+            remaining = &remaining[start + 2 + end + 2..];
+            continue;
         }
 
         // Single *italic* (only if not **)
         if let Some(start) = remaining.find('*') {
             // Make sure it's not the start of **
-            if !remaining[start..].starts_with("**") {
-                if let Some(end) = remaining[start + 1..].find('*') {
-                    if !remaining[start + 1 + end..].starts_with("**") {
-                        if start > 0 {
-                            spans.push(Span::raw(remaining[..start].to_string()));
-                        }
-                        let italic_text = &remaining[start + 1..start + 1 + end];
-                        spans.push(Span::styled(
-                            italic_text.to_string(),
-                            Style::default().add_modifier(Modifier::ITALIC),
-                        ));
-                        remaining = &remaining[start + 1 + end + 1..];
-                        continue;
-                    }
+            if !remaining[start..].starts_with("**")
+                && let Some(end) = remaining[start + 1..].find('*')
+                && !remaining[start + 1 + end..].starts_with("**")
+            {
+                if start > 0 {
+                    spans.push(Span::raw(remaining[..start].to_string()));
                 }
+                let italic_text = &remaining[start + 1..start + 1 + end];
+                spans.push(Span::styled(
+                    italic_text.to_string(),
+                    Style::default().add_modifier(Modifier::ITALIC),
+                ));
+                remaining = &remaining[start + 1 + end + 1..];
+                continue;
             }
         }
 

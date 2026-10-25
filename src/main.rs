@@ -532,13 +532,14 @@ fn main() -> anyhow::Result<()> {
                 let portraits = portrait::resolve_portrait(&name, character_data);
 
                 // Portrait before card (position: top)
-                if show_portrait && portrait_position == "top" {
-                    if let Some(path) = portraits.best_for_size(&portrait_size) {
-                        if !portrait::display_portrait(path, &portrait_align, &cfg.portrait) {
-                            println!("(terminal does not support inline images)");
-                        }
-                        println!();
+                if show_portrait
+                    && portrait_position == "top"
+                    && let Some(path) = portraits.best_for_size(&portrait_size)
+                {
+                    if !portrait::display_portrait(path, &portrait_align, &cfg.portrait) {
+                        println!("(terminal does not support inline images)");
                     }
+                    println!();
                 }
 
                 // Info card
@@ -568,10 +569,10 @@ fn main() -> anyhow::Result<()> {
                 // Portrait after card (position: bottom)
                 if show_portrait && portrait_position == "bottom" {
                     println!();
-                    if let Some(path) = portraits.best_for_size(&portrait_size) {
-                        if !portrait::display_portrait(path, &portrait_align, &cfg.portrait) {
-                            println!("(terminal does not support inline images)");
-                        }
+                    if let Some(path) = portraits.best_for_size(&portrait_size)
+                        && !portrait::display_portrait(path, &portrait_align, &cfg.portrait)
+                    {
+                        println!("(terminal does not support inline images)");
                     }
                 }
             }

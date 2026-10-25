@@ -216,10 +216,10 @@ fn fetch_manifest(cache: &Path) -> Result<Option<RemoteManifest>> {
 
     if now - meta.last_checked < MANIFEST_CHECK_INTERVAL_SECS {
         // Use cached manifest if within check interval
-        if let Ok(cached) = fs::read_to_string(&manifest_cache) {
-            if let Ok(m) = serde_json::from_str(&cached) {
-                return Ok(Some(m));
-            }
+        if let Ok(cached) = fs::read_to_string(&manifest_cache)
+            && let Ok(m) = serde_json::from_str(&cached)
+        {
+            return Ok(Some(m));
         }
     }
 

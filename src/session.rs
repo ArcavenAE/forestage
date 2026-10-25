@@ -170,10 +170,10 @@ pub fn start_streaming_session(
                             print!("{text}");
                             std::io::stdout().flush().ok();
                         }
-                    } else if block.block_type == "tool_use" {
-                        if let Some(name) = &block.name {
-                            usage.tool_uses.push(name.clone());
-                        }
+                    } else if block.block_type == "tool_use"
+                        && let Some(name) = &block.name
+                    {
+                        usage.tool_uses.push(name.clone());
                     }
                 }
 
@@ -273,10 +273,10 @@ pub fn run_prompt(
         "json" | "stream-json" => Ok(raw),
         _ => {
             // Extract the "result" field from the JSON response for human output
-            if let Ok(parsed) = serde_json::from_str::<serde_json::Value>(&raw) {
-                if let Some(result) = parsed.get("result").and_then(|v| v.as_str()) {
-                    return Ok(format!("{result}\n"));
-                }
+            if let Ok(parsed) = serde_json::from_str::<serde_json::Value>(&raw)
+                && let Some(result) = parsed.get("result").and_then(|v| v.as_str())
+            {
+                return Ok(format!("{result}\n"));
             }
             // Fallback: return raw if parsing fails
             Ok(raw)

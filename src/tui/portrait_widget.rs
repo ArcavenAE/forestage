@@ -162,12 +162,12 @@ impl PortraitWidget {
     /// The StatefulProtocol caches the rendered image and skips
     /// re-sending when it thinks nothing changed — this resets that.
     pub fn force_redraw(&mut self) {
-        if let (Some(path), Some(_)) = (&self.current_path, &self.image_state) {
-            if let Ok(img) = image::open(path) {
-                self.image_pixels = Some((img.width(), img.height()));
-                let protocol = self.picker.new_resize_protocol(img);
-                self.image_state = Some(protocol);
-            }
+        if let (Some(path), Some(_)) = (&self.current_path, &self.image_state)
+            && let Ok(img) = image::open(path)
+        {
+            self.image_pixels = Some((img.width(), img.height()));
+            let protocol = self.picker.new_resize_protocol(img);
+            self.image_state = Some(protocol);
         }
     }
 

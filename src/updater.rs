@@ -98,10 +98,10 @@ pub fn detect_install_method() -> Result<InstallMethod> {
     }
 
     // Linux package managers: check if the binary is managed by dpkg, rpm, or apk
-    if cfg!(target_os = "linux") {
-        if let Some(manager) = detect_linux_package_manager(&path_str) {
-            return Ok(InstallMethod::LinuxPackageManager { manager });
-        }
+    if cfg!(target_os = "linux")
+        && let Some(manager) = detect_linux_package_manager(&path_str)
+    {
+        return Ok(InstallMethod::LinuxPackageManager { manager });
     }
 
     Ok(InstallMethod::DirectBinary)

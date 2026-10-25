@@ -280,12 +280,12 @@ pub fn resolve_theme_and_persona(
             };
             // If the user asked for a theme but we couldn't resolve it,
             // note the back-propagation explicitly.
-            if let Some(orig) = theme_q {
-                if !orig.is_empty() {
-                    warn_stderr(&format!(
-                        "theme '{orig}' not found; resolved via persona '{pq}' → theme={theme_slug}"
-                    ));
-                }
+            if let Some(orig) = theme_q
+                && !orig.is_empty()
+            {
+                warn_stderr(&format!(
+                    "theme '{orig}' not found; resolved via persona '{pq}' → theme={theme_slug}"
+                ));
             }
             Some((theme_slug, char_slug))
         }

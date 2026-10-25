@@ -84,28 +84,28 @@ pub fn render_statusline(
     ));
 
     // Working directory
-    if let Ok(cwd) = std::env::current_dir() {
-        if let Some(dirname) = cwd.file_name() {
-            parts.push(format!(
-                "{}{}{}",
-                ansi::DIM,
-                dirname.to_string_lossy(),
-                ansi::RESET,
-            ));
-        }
+    if let Ok(cwd) = std::env::current_dir()
+        && let Some(dirname) = cwd.file_name()
+    {
+        parts.push(format!(
+            "{}{}{}",
+            ansi::DIM,
+            dirname.to_string_lossy(),
+            ansi::RESET,
+        ));
     }
 
     // Git info
-    if config.statusline.git_info {
-        if let Some(git) = get_git_info() {
-            let dirty_marker = if git.dirty { "*" } else { "" };
-            parts.push(format!(
-                "{}{}{dirty_marker}{}",
-                ansi::FG_GREEN,
-                git.branch,
-                ansi::RESET,
-            ));
-        }
+    if config.statusline.git_info
+        && let Some(git) = get_git_info()
+    {
+        let dirty_marker = if git.dirty { "*" } else { "" };
+        parts.push(format!(
+            "{}{}{dirty_marker}{}",
+            ansi::FG_GREEN,
+            git.branch,
+            ansi::RESET,
+        ));
     }
 
     // Model
@@ -117,10 +117,10 @@ pub fn render_statusline(
     ));
 
     // Context bar
-    if config.statusline.context_bar {
-        if let Some(pct) = context_pct {
-            parts.push(build_progress_bar(pct, 10));
-        }
+    if config.statusline.context_bar
+        && let Some(pct) = context_pct
+    {
+        parts.push(build_progress_bar(pct, 10));
     }
 
     parts.join(&format!(" {}|{} ", ansi::DIM, ansi::RESET))
