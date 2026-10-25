@@ -544,10 +544,10 @@ impl AppState {
                     content,
                     ..
                 } = block
+                    && *is_streaming
+                    && !content.is_empty()
                 {
-                    if *is_streaming && !content.is_empty() {
-                        *is_streaming = false;
-                    }
+                    *is_streaming = false;
                 }
             }
         }
@@ -584,10 +584,10 @@ impl AppState {
     fn find_tool_mut(&mut self, tool_use_id: &str) -> Option<&mut ToolCallItem> {
         if let Some(ConversationItem::AssistantTurn { blocks, .. }) = self.items.last_mut() {
             blocks.iter_mut().find_map(|b| {
-                if let TurnBlock::ToolCall(tool) = b {
-                    if tool.id == tool_use_id {
-                        return Some(tool);
-                    }
+                if let TurnBlock::ToolCall(tool) = b
+                    && tool.id == tool_use_id
+                {
+                    return Some(tool);
                 }
                 None
             })
@@ -619,11 +619,11 @@ impl AppState {
 
     /// Clear expired status messages (older than 5 seconds).
     pub fn tick_status_timeout(&mut self) {
-        if let Some(at) = self.status_message_at {
-            if at.elapsed() >= Duration::from_secs(5) {
-                self.status_message = None;
-                self.status_message_at = None;
-            }
+        if let Some(at) = self.status_message_at
+            && at.elapsed() >= Duration::from_secs(5)
+        {
+            self.status_message = None;
+            self.status_message_at = None;
         }
     }
 
@@ -689,11 +689,11 @@ impl AppState {
         for item in self.items.iter_mut().rev() {
             if let ConversationItem::AssistantTurn { blocks, .. } = item {
                 for block in blocks.iter_mut().rev() {
-                    if let TurnBlock::ToolCall(tool) = block {
-                        if matches!(tool.status, ToolStatus::Complete { .. }) {
-                            tool.is_expanded = !tool.is_expanded;
-                            return;
-                        }
+                    if let TurnBlock::ToolCall(tool) = block
+                        && matches!(tool.status, ToolStatus::Complete { .. })
+                    {
+                        tool.is_expanded = !tool.is_expanded;
+                        return;
                     }
                 }
             }
