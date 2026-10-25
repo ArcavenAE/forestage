@@ -126,7 +126,7 @@ pub fn load_theme(slug: &str) -> Result<ThemeFile> {
             slug: slug.to_string(),
         })?;
 
-    let theme: ThemeFile = serde_yaml::from_str(yaml).map_err(|e| ForestageError::Yaml {
+    let theme: ThemeFile = serde_norway::from_str(yaml).map_err(|e| ForestageError::Yaml {
         path: format!("embedded:{slug}"),
         source: e,
     })?;
