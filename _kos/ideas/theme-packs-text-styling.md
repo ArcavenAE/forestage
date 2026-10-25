@@ -1,3 +1,5 @@
+Dropped 2026-10-25: forestage retiring
+
 # Idea: Theme Packs for TUI Text Styling
 
 **Date:** 2026-04-12
